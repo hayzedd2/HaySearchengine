@@ -1,6 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { HashLoader } from "react-spinners";
+import ErrorElement from "./ErrorElement";
 
 const Api = () => {
   const key = "AIzaSyDrTIu7yDlYuTRG1Z5zWhhRaWMpYLG04rM";
@@ -18,7 +19,14 @@ const Api = () => {
     setLoading(true);
     try {
       const response = await fetch(url);
-      if (!response.ok) throw new Error("something went wrong");
+      if (response.status === 429)
+        throw new Error(
+          "Ooops! 😢 Search rate Exceeded \n You are seeing this because Google only allows 100 queries per day."
+        );
+      if (response.status === 400)
+        throw new Error(
+          "Ooops! 😢  Results not found \n  Try searching for a different thing."
+        );
       const data = await response.json();
       setMain(data.searchInformation);
       console.log(data);
@@ -26,6 +34,7 @@ const Api = () => {
       setError("");
     } catch (err) {
       setError(err.message);
+      console.log(err);
     } finally {
       setLoading(false);
     }
@@ -33,8 +42,9 @@ const Api = () => {
   const clickButton = () => {
     FetchSearch(search);
   };
+
   return (
-    <div className="container mx-auto p-4 px-10 max-w-5xl">
+    <div className="container">
       <h1 className="logo">HaYsearch</h1>
       <div className="col-span-full">
         <div className="mt-2 flex gap-2">
@@ -61,34 +71,39 @@ const Api = () => {
             <HashLoader />
           </div>
         ) : error ? (
-          <p>Error : {error.message}</p>
+          <ErrorElement message={error} />
         ) : data && maindata ? (
-          
           <div>
-            {maindata.length === 0 ? null : <h1 className="search-info">Generated {data.length} results in ({maindata.formattedSearchTime}s)</h1>}
-            
-            
-            {data.map((data, index) => {
-              return (
-                <div key={index}>
-                  <div className="search-card">
-                    <div className="flex-head">
-                      <div className="flex-head-text">
-                        <h3>
-                          <a href={data.link}>{data.title}</a>
-                        </h3>
-                        <h6>
-                          <a href={data.link}>{data.displayLink}</a>
-                        </h6>
+           
+            {data && data.length > 0
+            //  {maindata.length === 0 ? null : (
+            //   <h1 className="search-info">
+            //     Generated {data.length} results in (
+            //     {maindata.formattedSearchTime}s)
+            //   </h1>
+            // )}
+
+              ? 
+              data.map((result, index) => (
+                  <div key={index}>
+                    <div className="search-card">
+                      <div className="flex-head">
+                        <div className="flex-head-text">
+                          <h3>
+                            <a href={result.link}>{result.title}</a>
+                          </h3>
+                          <h6>
+                            <a href={result.link}>{result.displayLink}</a>
+                          </h6>
+                        </div>
+                      </div>
+                      <div className="flex-body">
+                        <p>{result.snippet}</p>
                       </div>
                     </div>
-                    <div className="flex-body">
-                      <p>{data.snippet}</p>
-                    </div>
                   </div>
-                </div>
-              );
-            })}
+                ))
+              : null}
           </div>
         ) : null}
       </div>
