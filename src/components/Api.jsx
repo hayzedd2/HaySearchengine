@@ -74,17 +74,15 @@ const Api = () => {
           <ErrorElement message={error} />
         ) : data && maindata ? (
           <div>
-           
             {data && data.length > 0
-            //  {maindata.length === 0 ? null : (
-            //   <h1 className="search-info">
-            //     Generated {data.length} results in (
-            //     {maindata.formattedSearchTime}s)
-            //   </h1>
-            // )}
+              ? //  {maindata.length === 0 ? null : (
+                //   <h1 className="search-info">
+                //     Generated {data.length} results in (
+                //     {maindata.formattedSearchTime}s)
+                //   </h1>
+                // )}
 
-              ? 
-              data.map((result, index) => (
+                data.map((result, index) => (
                   <div key={index}>
                     <div className="search-card">
                       <div className="flex-head">
