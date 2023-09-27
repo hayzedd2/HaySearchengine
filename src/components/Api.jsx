@@ -8,7 +8,6 @@ const Api = () => {
   const engineId = "a511845cd4b734f43";
   const [search, setSearch] = useState("");
   const [data, setData] = useState([]);
-  const [maindata, setMain] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const handleSearch = (e) => {
@@ -72,15 +71,10 @@ const Api = () => {
           </div>
         ) : error ? (
           <ErrorElement message={error} />
-        ) : data && maindata ? (
+        ) : data ? (
           <div>
             {data && data.length > 0
-              ? //  {maindata.length === 0 ? null : (
-                //   <h1 className="search-info">
-                //     Generated {data.length} results in (
-                //     {maindata.formattedSearchTime}s)
-                //   </h1>
-                // )}
+              ? 
 
                 data.map((result, index) => (
                   <div key={index}>
